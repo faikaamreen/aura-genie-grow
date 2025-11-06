@@ -2,14 +2,68 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { FloatingGenie } from '@/components/FloatingGenie';
+import { AuthModal } from '@/components/AuthModal';
 import { fadeIn, staggerContainer } from '@/utils/motion';
-import { Sparkles, Brain, Target } from 'lucide-react';
+import { Sparkles, Brain, Target, LogIn } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [showNavbar, setShowNavbar] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowNavbar(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const openAuth = (mode: 'login' | 'signup') => {
+    setAuthMode(mode);
+    setShowAuthModal(true);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Scroll-triggered navbar */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: showNavbar ? 0 : -100 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-primary/20"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-primary" />
+            <span className="text-xl font-bold gradient-text">GENIE</span>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {currentUser ? (
+              <Button onClick={() => navigate('/explore')}>
+                Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" onClick={() => openAuth('login')}>
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Log In
+                </Button>
+                <Button onClick={() => openAuth('signup')}>
+                  Sign Up
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </motion.nav>
+
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/5" />
       
@@ -87,6 +141,13 @@ const Landing = () => {
           </Button>
         </motion.div>
       </motion.div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        defaultMode={authMode}
+      />
     </div>
   );
 };
