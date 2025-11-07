@@ -129,16 +129,38 @@ const Landing = () => {
           ))}
         </motion.div>
 
-        {/* CTA Button */}
-        <motion.div variants={fadeIn('up', 0.8)}>
-          <Button
-            size="lg"
-            onClick={() => navigate('/explore')}
-            className="text-lg px-8 py-6 shadow-neon-blue hover:shadow-neon-pink transition-all"
-          >
-            <Sparkles className="w-5 h-5 mr-2" />
-            Explore GENIE
-          </Button>
+        {/* CTA Buttons */}
+        <motion.div variants={fadeIn('up', 0.8)} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {currentUser ? (
+            <Button
+              size="lg"
+              onClick={() => navigate('/explore')}
+              className="text-lg px-8 py-6 shadow-neon-blue hover:shadow-neon-pink transition-all"
+            >
+              <Sparkles className="w-5 h-5 mr-2" />
+              Go to Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="lg"
+                onClick={() => openAuth('signup')}
+                className="text-lg px-8 py-6 shadow-neon-blue hover:shadow-neon-pink transition-all"
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                Sign Up
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => openAuth('login')}
+                className="text-lg px-8 py-6"
+              >
+                <LogIn className="w-5 h-5 mr-2" />
+                Log In
+              </Button>
+            </>
+          )}
         </motion.div>
       </motion.div>
 
