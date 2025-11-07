@@ -14,7 +14,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Initialize analytics only if supported
+let analytics;
+try {
+  analytics = getAnalytics(app);
+} catch (error) {
+  console.log('Analytics not supported in this environment');
+}
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
