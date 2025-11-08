@@ -17,13 +17,13 @@ interface Message {
   content: string;
 }
 
-// ✅ Gemini server call
-async function callGeminiServerSide(prompt: string): Promise<string> {
+// ✅ GROQ API call (fixed to match your server response)
+async function callGroqAPI(prompt: string): Promise<string> {
   try {
-    const res = await fetch("http://localhost:5000/api/gemini", {
+    const res = await fetch("http://localhost:5000/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ message: prompt }),
     });
 
     if (!res.ok) {
@@ -32,7 +32,7 @@ async function callGeminiServerSide(prompt: string): Promise<string> {
     }
 
     const data = await res.json();
-    return data.reply || "No response from Genie.";
+    return data.answer || "No response from Genie.";
   } catch (err: any) {
     console.error("Error contacting backend:", err);
     return "Genie had trouble responding. Please try again later.";
@@ -57,8 +57,8 @@ const AITutor = () => {
 
     try {
       const mood = currentEmotion || 'neutral';
-      const prompt = `You are GENIE, user's mood: ${mood}. User asked: "${input}"`;
-      const replyText = await callGeminiServerSide(prompt);
+      const prompt = `You are GENIE, an AI tutor. User's mood: ${mood}. User asked: "${input}"`;
+      const replyText = await callGroqAPI(prompt);
 
       setMessages(prev => {
         const withoutThinking = prev.filter(m => m.content !== 'Genie is thinking...');
