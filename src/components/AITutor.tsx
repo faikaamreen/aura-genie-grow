@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useEmotion } from "@/store/useEmotion"; // ✅ Correct Zustand import
 import { fadeIn, staggerContainer } from "@/utils/motion";
 import AvatarViewer from "./AvatarViewer";
-import { useNavigate } from "react-router-dom"; // ✅ Added for Back navigation
+import { useNavigate } from "react-router-dom"; // ✅ For navigation
 
 // ✅ Avatar link
 const avatarLinks = [
@@ -90,7 +90,7 @@ const AITutor = () => {
     },
   ]);
   const [input, setInput] = useState("");
-  const { emotion } = useEmotion();
+  const { emotion } = useEmotion(); // ✅ Zustand emotion store
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(avatarLinks[0]);
 
   const handleSend = async () => {
